@@ -7,11 +7,16 @@ from gamelib import Sprite, GameApp, Text
 
 from consts import *
 
-class SlowFruit(Sprite):
+
+class Fruit(Sprite):
+    def __init__(self, app, image_filename, x, y):
+        super().__init__(app, image_filename, x, y)
+        self.app = app
+
+
+class SlowFruit(Fruit):
     def __init__(self, app, x, y):
         super().__init__(app, 'images/apple.png', x, y)
-
-        self.app = app
 
     def update(self):
         self.y += FRUIT_SLOW_SPEED
@@ -20,11 +25,9 @@ class SlowFruit(Sprite):
             self.to_be_deleted = True
 
 
-class FastFruit(Sprite):
+class FastFruit(Fruit):
     def __init__(self, app, x, y):
         super().__init__(app, 'images/banana.png', x, y)
-
-        self.app = app
 
     def update(self):
         self.y += FRUIT_FAST_SPEED
@@ -33,12 +36,10 @@ class FastFruit(Sprite):
             self.to_be_deleted = True
 
 
-class SlideFruit(Sprite):
+class SlideFruit(Fruit):
     def __init__(self, app, x, y):
         super().__init__(app, 'images/cherry.png', x, y)
-
-        self.app = app
-        self.direction = randint(0,1)*2 - 1
+        self.direction = randint(0, 1) * 2 - 1
 
     def update(self):
         self.y += FRUIT_FAST_SPEED
@@ -48,17 +49,17 @@ class SlideFruit(Sprite):
             self.to_be_deleted = True
 
 
-class CurvyFruit(Sprite):
+class CurvyFruit(Fruit):
     def __init__(self, app, x, y):
         super().__init__(app, 'images/pear.png', x, y)
 
         self.app = app
-        self.t = randint(0,360) * 2 * math.pi / 360
+        self.t = randint(0, 360) * 2 * math.pi / 360
 
     def update(self):
         self.y += FRUIT_SLOW_SPEED * 1.2
         self.t += 1
-        self.x += math.sin(self.t*0.08)*10
+        self.x += math.sin(self.t * 0.08) * 10
 
         if self.y > CANVAS_WIDTH + 30:
             self.to_be_deleted = True
@@ -140,12 +141,12 @@ class BasketGame(GameApp):
             self.basket.direction = BASKET_LEFT
         elif event.keysym == 'Right':
             self.basket.direction = BASKET_RIGHT
-    
+
 
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Basket Fighter")
- 
+
     # do not allow window resizing
     root.resizable(False, False)
     app = BasketGame(root, CANVAS_WIDTH, CANVAS_HEIGHT, UPDATE_DELAY)
